@@ -4,6 +4,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import ru.dreamkas.core.Scenario
+import kotlin.time.ExperimentalTime
+import kotlin.time.MonoClock
+import kotlin.time.measureTime
 
 open class Main {
     fun start() {
@@ -26,6 +29,9 @@ open class Main {
 
 }
 
-fun main(args: Array<String>) {
-    Main().start()
+@UseExperimental(ExperimentalTime::class)
+fun main() {
+    println(MonoClock.measureTime {
+        Main().start()
+    }.toLongMilliseconds())
 }
