@@ -10,17 +10,32 @@ import kotlin.time.measureTime
 
 open class Main {
     fun start() {
-        val basePackage = "ru.dreamkas"
+        val coreServiceCtx = AnnotationConfigApplicationContext()
+        val coreScanner = ClassPathBeanDefinitionScanner(coreServiceCtx)
+        coreScanner.resetFilters(false)
+        coreScanner.addIncludeFilter(AnnotationTypeFilter(Scenario::class.java))
+        coreScanner.scan("ru.dreamkas.db")
+        coreServiceCtx.refresh()
+
+
+        val beans1 = coreServiceCtx.beanDefinitionNames
+                .map { coreServiceCtx.getBean(it).javaClass.name }
+                .filter { it.startsWith("ru.dreamkas") }
+        println("Loaded beans1:\n${beans1.joinToString(separator = "\n")}")
+
+
+        val basePackage = "ru.dreamkas.touch"
         val context = AnnotationConfigApplicationContext()
         val scanner = ClassPathBeanDefinitionScanner(context)
         scanner.resetFilters(false)
         scanner.addIncludeFilter(AnnotationTypeFilter(Scenario::class.java))
         scanner.scan(basePackage)
+        context.parent = coreServiceCtx
         context.refresh()
 
         val beans = context.beanDefinitionNames
                 .map { context.getBean(it).javaClass.name }
-                .filter { it.startsWith(basePackage) }
+                .filter { it.startsWith("ru.dreamkas") }
 
         println("Loaded beans:\n${beans.joinToString(separator = "\n")}")
 
