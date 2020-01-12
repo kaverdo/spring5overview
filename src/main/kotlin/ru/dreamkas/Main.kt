@@ -1,5 +1,7 @@
 package ru.dreamkas
 
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor
+import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner
 import org.springframework.core.type.filter.AnnotationTypeFilter
@@ -10,7 +12,19 @@ import kotlin.time.measureTime
 
 open class Main {
     fun start() {
-        val coreServiceCtx = AnnotationConfigApplicationContext()
+        val coreServiceCtx = AnnotationConfigApplicationContext(MyBeanFactory())
+//        coreServiceCtx.autowireCapableBeanFactory addBeanFactoryPostProcessor(BeanFactoryPostProcessor { beanFactory ->
+//            beanFactory.beanNamesIterator.forEach {
+//                println("corectx $it")
+//                if (it == "databaseService") {
+//                    beanFactory.getBean(it)?.also { bean ->
+//                        println("ignored ${bean.javaClass}")
+//                        beanFactory.ignoreDependencyType(bean.javaClass)
+//                    }
+//                }
+//            }
+//        })
+
         val coreScanner = ClassPathBeanDefinitionScanner(coreServiceCtx)
         coreScanner.resetFilters(false)
         coreScanner.addIncludeFilter(AnnotationTypeFilter(Scenario::class.java))
@@ -25,7 +39,18 @@ open class Main {
 
 
         val basePackage = "ru.dreamkas.touch"
-        val context = AnnotationConfigApplicationContext()
+        val context = AnnotationConfigApplicationContext(MyBeanFactory())
+//        context.addBeanFactoryPostProcessor(BeanFactoryPostProcessor { beanFactory ->
+//            beanFactory.beanNamesIterator.forEach {
+//                println("ctx $it")
+//                if (it == "databaseService") {
+//                    beanFactory.getBean(it)?.also { bean ->
+//                        println("ignored ${bean.javaClass}")
+//                        beanFactory.ignoreDependencyType(bean.javaClass)
+//                    }
+//                }
+//            }
+//        })
         val scanner = ClassPathBeanDefinitionScanner(context)
         scanner.resetFilters(false)
         scanner.addIncludeFilter(AnnotationTypeFilter(Scenario::class.java))

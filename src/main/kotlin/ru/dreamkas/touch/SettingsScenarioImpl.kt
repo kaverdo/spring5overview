@@ -6,8 +6,16 @@ import ru.dreamkas.db.DatabaseService
 
 @Scenario("tunes")
 class SettingsScenarioImpl(
-        val db: DatabaseService
+         db: DatabaseService
 ) : SettingsScenario {
+
+    private val db: DatabaseService
+
+    init {
+        this.db = db
+    }
+
+
     override fun start() {
         println("${this.javaClass.simpleName}.start")
         println(db.javaClass.simpleName)
